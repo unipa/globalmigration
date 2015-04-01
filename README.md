@@ -23,7 +23,7 @@ grunt --countries=../europe/north.csv --data=../mydata/north-europe-data.csv
 ```
 
 ## More info
-Other details can be found at the FAQ page
+Other details can be found at [[FAQ|faq]] page
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style.
