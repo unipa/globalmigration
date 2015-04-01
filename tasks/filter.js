@@ -10,6 +10,7 @@
 
 var csv = require('csv');
 var fs = require('fs');
+var path = require('path');
 
 module.exports = function(grunt) {
   function countries(filename, done) {
@@ -107,6 +108,11 @@ module.exports = function(grunt) {
         files.forEach(function(file) {
           file.src.forEach(function(src) {
             grunt.log.write('Filtering ' + src + '...');
+
+            var destDir = path.dirname(file.dest);
+            if (!fs.existsSync(destDir)) {
+              fs.mkdirSync(destDir);
+            }
 
             filter(src, file.dest, codes, options, function(err) {
               if (err) {
