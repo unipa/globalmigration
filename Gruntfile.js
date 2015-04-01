@@ -1,6 +1,10 @@
 'use strict';
 
 module.exports = function(grunt) {
+  var countriesCSV = grunt.option('countries') || 'data/countries Version2.csv';
+  var dataCSV = grunt.option('data') || 'data/Flow Data for Online Viz Version2.csv';
+  var outData = grunt.option('out-data') || 'tmp/data.csv';
+
   grunt.initConfig({
     jshint: {
       options: {
@@ -19,15 +23,15 @@ module.exports = function(grunt) {
     filter: {
       main: {
         options: {
-          countries: 'data/countries Version2.csv'
+          countries: countriesCSV
         },
-        src: 'data/Flow Data for Online Viz Version2.csv',
-        dest: 'tmp/data.csv'
+        src: dataCSV,
+        dest: outData
       }
     },
     compile: {
       main: {
-        src: 'tmp/data.csv',
+        src: outData,
         dest: 'json/migrations.json'
       }
     },
@@ -96,6 +100,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-copy');
 
-  grunt.registerTask('build', ['concat', 'cssmin', 'uglify', 'copy']);
+  // grunt.registerTask('build', ['concat', 'cssmin', 'uglify', 'copy']);
+  grunt.registerTask('build', ['concat', 'cssmin', 'copy']);
   grunt.registerTask('default', ['jshint', 'nodeunit', 'filter', 'compile', 'build']);
 };
