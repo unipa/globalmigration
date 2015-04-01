@@ -15,23 +15,17 @@ module.exports = function(grunt) {
   // Compile csv data file into JSON matrix
   function compile(filename, options, done) {
     var data = {
-      years: {
-        1990: {},
-        1995: {},
-        2000: {},
-        2005: {}
-      },
+      years: {},
       migrations: {},
       regions: {}
     };
-    var years = Object.keys(data.years);
+    var years = null;
     var headers = [];
     
     // sort order
-    var sortedRegions = ['North America', 'Africa', 'Europe', 'Fmr Soviet Union', 'West Asia', 'South Asia', 'East Asia', 'South-East Asia', 'Oceania', 'Latin America'];
+    var sortedRegions = [];//'North America', 'Africa', 'Europe', 'Fmr Soviet Union', 'West Asia', 'South Asia', 'East Asia', 'South-East Asia', 'Oceania', 'Latin America'];
 
     // create object from headers out of row
-    // TODO: get years from CSV
     function obj(row) {
       return row.reduce(function(memo, col, i) {
         memo[headers[i]] = col;
@@ -39,10 +33,23 @@ module.exports = function(grunt) {
       }, {});
     }
 
+    function yearsFromHeader(headers) {
+      return headers.reduce(function(memo, col) {
+          if (col.indexOf('countryflow_') === 0) {
+            memo.push(parseInt(col.split(/(\d+)/)[1], 10));
+          }
+          return memo;
+      }, []);
+    }
+
     csv()
       .from.stream(fs.createReadStream(filename))
       .on('record', function(row, index){
         if (index === 0) {
+          years = yearsFromHeader(row);
+          years.forEach(function(year) {
+            data.years[year] = {};
+          });
           return headers = row;
         }
 
